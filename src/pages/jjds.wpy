@@ -1,0 +1,86 @@
+<template>
+  <view class="container">
+    {{p1}}{{opt}}{{p2}}={{res}}
+  </view>
+  <view class="opt">
+    <button type="primary" size="mini" bindtap="correct"> 正确 </button>
+    <button type="primary" size="mini" bindtap="wrong"> 错误 </button>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import { connect } from 'wepy-redux'
+
+  import testMixin from '../mixins/test'
+
+  @connect({
+    num (state) {
+      return state.counter.num
+    }
+  })
+
+  export default class Jjds extends wepy.page {
+    config = {
+      navigationBarTitleText: 'demo'
+    }
+    components = {
+    }
+
+    mixins = [testMixin]
+
+    data = {
+      p1: '?',
+      opt: '?',
+      p2: '?',
+      res: '?'
+    }
+
+    computed = {
+      now () {
+        return +new Date()
+      }
+    }
+
+    methods = {
+      correct: function () {
+        console.log(234)
+      },
+      wrong: function () {
+
+      }
+    }
+
+    events = {
+    }
+
+    onLoad() {
+    }
+  }
+</script>
+<style lang="less">
+  .container {
+    height: 200rpx;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+  }
+  .opt {
+    width: 750rpx;
+    height: 300rpx;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    button {
+      width: 320rpx;
+      height: 200rpx;
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: center;
+      align-items: center;
+      font-size: 32rpx;
+    }
+  }
+</style>

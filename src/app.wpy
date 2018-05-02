@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang='less'>
 .container {
   height: 100%;
   display: flex;
@@ -22,14 +22,45 @@ setStore(store)
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/index'
+      'pages/index',
+      'pages/jjds',
+      'pages/common',
+      'pages/demo'
     ],
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
-      navigationBarTitleText: 'WeChat',
+      navigationBarTitleText: '康乐长跑计划',
       navigationBarTextStyle: 'black'
-    }
+    },
+    tabBar: {
+      list: [{
+        pagePath: 'pages/index',
+        text: '首页',
+        iconPath: 'image/shouye.png',
+        selectedIconPath: 'image/shouye-on.png'
+      }, {
+        pagePath: 'pages/common',
+        text: 'common',
+        iconPath: 'image/geren.png',
+        selectedIconPath: 'image/geren-on.png'
+      }, {
+        pagePath: 'pages/jjds',
+        text: '加减大师',
+        iconPath: 'image/huzhao.png',
+        selectedIconPath: 'image/huzhao-on.png'
+      }, {
+        pagePath: 'pages/demo',
+        text: 'demo',
+        iconPath: 'image/geren.png',
+        selectedIconPath: 'image/geren-on.png'
+      }]
+    },
+    networkTimeout: {
+      request: 10000,
+      downloadFile: 10000
+    },
+    debug: true
   }
 
   globalData = {

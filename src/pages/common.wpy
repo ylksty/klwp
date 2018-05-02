@@ -1,0 +1,49 @@
+<template>
+  <view class="container">
+    common
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import { connect } from 'wepy-redux'
+
+  import testMixin from '../mixins/test'
+
+  @connect({
+    num (state) {
+      return state.counter.num
+    }
+  })
+
+  export default class Common extends wepy.page {
+    config = {
+      navigationBarTitleText: 'demo'
+    }
+    components = {
+    }
+
+    mixins = [testMixin]
+
+    data = {
+    }
+
+    computed = {
+      now () {
+        return +new Date()
+      }
+    }
+
+    methods = {
+    }
+
+    events = {
+    }
+
+    onLoad() {
+    }
+  }
+</script>
+<style lang="less">
+
+</style>
