@@ -49,7 +49,7 @@
 
     <panel>
       <view class="title" slot="title">测试组件Repeat</view>
-      <repeat for="" index="index" item="item" key="key">
+      <repeat for="{{groupList}}" index="index" item="item" key="key">
         <group :grouplist="item" :indexa="index"></group>
       </repeat>
     </panel>
@@ -109,7 +109,7 @@
         nickName: '加载中...'
       },
       normalTitle: '原始标题',
-      setTimeoutTitle: '标题三秒后会被修改',
+      setTimeoutTitle: '原始标题',
       count: 0,
       netrst: '',
       groupList: [
@@ -164,9 +164,17 @@
       }
     }
 
+    watch = {
+      mynum (newValue, oldValue) {
+        console.log(`num value: ${oldValue} -> ${newValue}`)
+      }
+    }
+
     methods = {
-      plus () {
+      async plus () { // 函数执行，都会刷新一遍内容，遇到同步等待，后面的数据更新不会驱动内容刷新
+        await this.$parent.sleep(3)
         this.mynum++
+        this.$apply() // 这样就可以同步刷新
       },
       toast () {
         let promise = this.$invoke('toast', 'show', {
@@ -212,7 +220,7 @@
     events = {
       'index-emit': (...args) => {
         let $event = args[args.length - 1]
-        console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`)
+        console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name} type is ${$event.type}`)
       }
     }
 
@@ -220,7 +228,7 @@
       let self = this
       this.$parent.getUserInfo(function (userInfo) {
         if (userInfo) {
-          self.userInfo = userInfo
+          self.userInfo = userInfo.userInfo
         }
         self.normalTitle = '标题已被修改'
 

@@ -50,6 +50,13 @@
     }
 
     onLoad () {
+      console.log(`this.$name: ${this.$name}`)
+      console.log(`this.$isComponent: ${this.$isComponent}`)
+      console.log(`$wxpage: `, this.$wxpage)
+      console.log(`$parent: `, this.$parent)
+      console.log(`$root: `, this.$root)
+      console.log(`$coms: `, this.$coms)
+      console.log(`$mixins: `, this.$mixins)
     }
   }
 </script>

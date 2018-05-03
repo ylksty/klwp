@@ -16,10 +16,26 @@ import 'wepy-async-function'
 import { setStore } from 'wepy-redux'
 import configStore from './store'
 
+import authModel from './model/authModel'
+
 const store = configStore()
 setStore(store)
 
 export default class extends wepy.app {
+  constructor () {
+    super()
+    this.use('requestfix')
+    this.use('promisify')
+    this.intercept('request', {
+      config (p) {
+        p.timestamp = +new Date()
+        return p
+      },
+      success (obj) {
+        console.log('request success')
+      }
+    })
+  }
   config = {
     pages: [
       'pages/index',
@@ -60,16 +76,11 @@ export default class extends wepy.app {
       request: 10000,
       downloadFile: 10000
     },
-    debug: true
+    debug: false
   }
 
   globalData = {
     userInfo: null
-  }
-
-  constructor () {
-    super()
-    this.use('requestfix')
   }
 
   onLaunch() {
@@ -89,17 +100,13 @@ export default class extends wepy.app {
     console.log(data)
   }
 
-  getUserInfo(cb) {
+  async getUserInfo(cb) {
     const that = this
     if (this.globalData.userInfo) {
       return this.globalData.userInfo
     }
-    wepy.getUserInfo({
-      success (res) {
-        that.globalData.userInfo = res.userInfo
-        cb && cb(res.userInfo)
-      }
-    })
+    that.globalData.userInfo = await authModel.getUserInfo()
+    cb && cb(that.globalData.userInfo)
   }
 }
 </script>
