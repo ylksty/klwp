@@ -1,31 +1,27 @@
 <template>
   <view class="container">
-    common
+    <ul>
+      <li>
+        {{ version }}
+      </li>
+    </ul>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
-  import { connect } from 'wepy-redux'
-
-  import testMixin from '../mixins/test'
-
-  @connect({
-    num (state) {
-      return state.counter.num
-    }
-  })
+  import { api, version } from '../config'
+  import http from '../utils/request'
 
   export default class Common extends wepy.page {
     config = {
-      navigationBarTitleText: 'demo'
+      navigationBarTitleText: 'common'
     }
     components = {
     }
 
-    mixins = [testMixin]
-
     data = {
+      version: version
     }
 
     computed = {
@@ -40,7 +36,15 @@
     events = {
     }
 
-    onLoad() {
+    async onLoad() {
+      const res = await http({
+        url: api.user.login.url,
+        method: api.user.login.method,
+        data: {
+          bid: 22
+        }
+      })
+      console.log(res)
     }
   }
 </script>

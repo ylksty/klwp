@@ -1,12 +1,12 @@
 // ENV
-const env = 'production' // 'development' or 'production'
+const env = 'development' // 'development' or 'production'
 
 // WXAPP VERSION
 const version = 2.0
 
 // development and production host
 const hosts = {
-  development: 'http://localhost:3020',
+  development: 'http://localhost',
   production: 'https://sd.iszu.cn'
 }
 
