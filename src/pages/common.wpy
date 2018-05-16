@@ -1,24 +1,33 @@
 <template>
   <view class="container">
-    <ul>
-      <li>
-        {{ version }}
-      </li>
-    </ul>
+    <panel>
+      <view class="title" slot="title">接口</view>
+      <button @tap="syncRequestTap" size="mini">同步请求</button>
+      <button @tap="asyncRequestTap" size="mini">异步请求</button>
+    </panel>
+    <panel>
+      <view class="title" slot="title">用户接口</view>
+      <button @tap="getUserInfo" size="mini">需要用户登录的接口，获取用户成绩</button>
+    </panel>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
   import { api, version } from '../config'
-  import http from '../utils/request'
+  import Panel from '@/components/panel' // alias example
+  import requestMixin from '../mixins/request'
+  import authModel from '../model/authModel'
 
   export default class Common extends wepy.page {
     config = {
       navigationBarTitleText: 'common'
     }
     components = {
+      panel: Panel
     }
+
+    mixins = [requestMixin]
 
     data = {
       version: version
@@ -31,20 +40,31 @@
     }
 
     methods = {
+      // 同步请求
+      async syncRequestTap () {
+        let config = Object.assign({}, api.user.login, {data: { code: 22, type: '' }})
+        let res = await this.syncRequest(config)
+        console.log(res)
+      },
+      // 异步请求
+      asyncRequestTap () {
+        let config = Object.assign({}, api.user.login, {data: { code: 22 }})
+        this.asyncRequest(config, function (res) {
+          console.log(res)
+        })
+      },
+      async getUserInfo () {
+        let config = Object.assign({}, api.user.info, {data: { id: 1 }})
+        let res = await this.syncRequest(config)
+        console.log(res)
+      }
     }
 
     events = {
     }
 
-    async onLoad() {
-      const res = await http({
-        url: api.user.login.url,
-        method: api.user.login.method,
-        data: {
-          bid: 22
-        }
-      })
-      console.log(res)
+    onLoad() {
+      authModel.getSessionKey()
     }
   }
 </script>

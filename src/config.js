@@ -1,13 +1,15 @@
 // ENV
-const env = 'development' // 'development' or 'production'
+// const env = 'development' // 'development' or 'production'
+const env = 'production' // 'development' or 'production'
 
 // WXAPP VERSION
 const version = 2.0
 
 // development and production host
 const hosts = {
-  development: 'http://localhost',
-  production: 'https://sd.iszu.cn'
+  // development: 'http://wx.ylkget.cn',
+  development: 'https://result.eolinker.com/HZRfx7E8cd7842bc3895f872138e9ac67da967d8b3aaa6c?uri=',
+  production: 'https://wx.ylkget.com'
 }
 
 // apis
@@ -24,11 +26,15 @@ const api = {
      */
     login: {
       method: 'POST',
-      url: '/user/wxlogin'
+      url: '/wx/user/login',
+      data: {
+        code: 'required'
+      }
     },
     info: {
       method: 'GET',
-      url: '/user/info'
+      url: '/wx/user/{id}',
+      auth: true
     },
     blog: {
       method: 'GET',

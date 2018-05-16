@@ -1,6 +1,6 @@
 import wepy from 'wepy'
 import _ from './wx.promise'
-// import config from './config'
+import { api } from '../config'
 
 function authGet(key) {
   // 合成接口对应的授权名
@@ -59,7 +59,26 @@ function reGet(scope, authRes) {
   })
 }
 async function getSessionKey(force = false) { // 获得sessionKey
-  // todo
+  let checkSession = await _.checkSession().then(res => {
+    return true
+  }, res => {
+    return false
+  })
+  let storageSession = wepy.getStorageSync('storageSession')
+  if (checkSession && storageSession && !force) { // 返回缓存
+    return storageSession
+  } else {
+    let ldata = await _.login() // 同步登陆
+    console.log(ldata)
+    let code = ldata.code
+    console.log(api.user.login)
+    let config = Object.assign({}, api.user.login, {data: { code }})
+    let res = await wepy.request(config).then(res => {
+      return res
+    })
+    console.log(res)
+  }
+  return checkSession
 }
 async function getUserInfo() {
   await authGet('userInfo')
