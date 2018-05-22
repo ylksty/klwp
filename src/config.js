@@ -1,6 +1,7 @@
 // ENV
 // const env = 'development' // 'development' or 'production'
-const env = 'production' // 'development' or 'production'
+const env = 'development' // 'development' or 'production'
+// const env = 'production' // 'development' or 'production'
 
 // WXAPP VERSION
 const version = 2.0
@@ -33,7 +34,7 @@ const api = {
     },
     info: {
       method: 'GET',
-      url: '/wx/user/{id}',
+      url: '/wx/user/info/{id}',
       auth: true
     },
     blog: {

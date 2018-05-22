@@ -7,24 +7,46 @@
     </panel>
     <panel>
       <view class="title" slot="title">用户接口</view>
-      <button @tap="getUserInfo" size="mini">需要用户登录的接口，获取用户成绩</button>
+      <button @tap="getUserInfo" size="mini">获取用户信息，自动处理登录</button>
+      <button open-type="getUserInfo" size="mini">getUserInfo</button>
+      <requests :userInfoButton="userInfoButton"></requests>
+      {{userInfoButton}}
+    </panel>
+    <panel>
+      <view class="title" slot="title">redux测试</view>
+      <view>{{stateDemoMsg}}</view>
+      <button @tap="changeStateDemoMsg" size="mini">changeStateDemoMsg</button>
+      <button @tap="demoFun" size="mini">demoFun</button>
     </panel>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
+  import { connect } from 'wepy-redux'
   import { api, version } from '../config'
   import Panel from '@/components/panel' // alias example
+  import Requests from '@/components/requests' // aliasFields example
   import requestMixin from '../mixins/request'
-  import authModel from '../model/authModel'
+  import { DEMOMSGCHANGE } from '../store/types/demo'
+  import { demoFun } from '../store/actions'
+  import request from '../model/request'
 
+  @connect({
+    stateDemoMsg (state) {
+      return state.demo.msg
+    }
+  }, {
+    changeStateDemoMsg: {type: DEMOMSGCHANGE, payload: 3},
+    demoFun
+  })
   export default class Common extends wepy.page {
     config = {
       navigationBarTitleText: 'common'
     }
     components = {
-      panel: Panel
+      panel: Panel,
+      requests: Requests
     }
 
     mixins = [requestMixin]
@@ -48,14 +70,18 @@
       },
       // 异步请求
       asyncRequestTap () {
-        let config = Object.assign({}, api.user.login, {data: { code: 22 }})
-        this.asyncRequest(config, function (res) {
-          console.log(res)
+        console.log(22)
+        request.asyncRequest({auth: true}, function() {
+          console.log(222)
         })
+//        let config = Object.assign({}, api.user.login, {data: { code: 22 }})
+//        this.msasyncRequest(config, function (res) {
+//          console.log(res)
+//        })
       },
       async getUserInfo () {
         let config = Object.assign({}, api.user.info, {data: { id: 1 }})
-        let res = await this.syncRequest(config)
+        let res = await this.mxsyncRequest(config)
         console.log(res)
       }
     }
@@ -64,7 +90,7 @@
     }
 
     onLoad() {
-      authModel.getSessionKey()
+
     }
   }
 </script>

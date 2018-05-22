@@ -1,0 +1,33 @@
+<style lang="less">
+
+</style>
+<template>
+  <view>
+    abc {{userInfoButton}}
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+
+  export default class requests extends wepy.component {
+    props = {
+      userInfoButton: {
+        type: Number,
+        default: 1
+      }
+    }
+
+    data = {
+    }
+
+    watch = {
+      userInfoButton (curVal, oldVal) {
+        console.log(`旧值：${oldVal}，新值：${curVal}`)
+      }
+    }
+
+    methods = {
+
+    }
+  }
+</script>

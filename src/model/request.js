@@ -3,7 +3,10 @@ import authModel from './authModel'
 
 async function syncRequest(apiConfig) {
   if (apiConfig.auth) {
-    let sk = authModel.getSessionKey()
+    let sk = await authModel.getSessionKey()
+    if (!sk) {
+      return false
+    }
     apiConfig.header = {}
     apiConfig.header.cookie = 'SESSION=' + sk
   }
@@ -13,11 +16,25 @@ async function syncRequest(apiConfig) {
 
 function asyncRequest(apiConfig, cb) {
   if (apiConfig.auth) {
-    let sk = authModel.getSessionKey()
-    apiConfig.header = {}
-    apiConfig.header.cookie = 'SESSION=' + sk
+    getSk().then(res => {
+      console.log(res)
+      return
+      apiConfig.header = {}
+      apiConfig.header.cookie = 'SESSION=' + res
+      wepy.request(apiConfig).then(d => cb(d))
+    })
   }
-  wepy.request(apiConfig).then(d => cb(d))
+}
+
+async function getSk() {
+  return new Promise(async (res, rej) => {
+    let sk = await authModel.getSessionKey()
+    if (!sk) {
+      rej(false)
+    } else {
+      res(sk)
+    }
+  })
 }
 
 export default {

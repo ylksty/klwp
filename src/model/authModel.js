@@ -64,19 +64,22 @@ async function getSessionKey(force = false) { // 获得sessionKey
   }, res => {
     return false
   })
+  return 234
   let storageSession = wepy.getStorageSync('storageSession')
   if (checkSession && storageSession && !force) { // 返回缓存
     return storageSession
   } else {
     let ldata = await _.login() // 同步登陆
-    console.log(ldata)
     let code = ldata.code
-    console.log(api.user.login)
     let config = Object.assign({}, api.user.login, {data: { code }})
-    let res = await wepy.request(config).then(res => {
-      return res
-    })
-    console.log(res)
+    let res = await wepy.request(config)
+    if (res.code === 200) {
+      let sessionKey = res.data
+      console.log(sessionKey)
+      await authGet('userInfo')
+    } else {
+      console.log(res)
+    }
   }
   return checkSession
 }
