@@ -1,6 +1,7 @@
 // ENV
 // const env = 'development' // 'development' or 'production'
-const env = 'development' // 'development' or 'production'
+// const env = 'development' // 'development' or 'production'
+const env = 'test' // 'development' or 'production'
 // const env = 'production' // 'development' or 'production'
 
 // WXAPP VERSION
@@ -8,8 +9,8 @@ const version = 2.0
 
 // development and production host
 const hosts = {
-  // development: 'http://wx.ylkget.cn',
   development: 'https://result.eolinker.com/HZRfx7E8cd7842bc3895f872138e9ac67da967d8b3aaa6c?uri=',
+  test: 'http://wx.ylkget.cn',
   production: 'https://wx.ylkget.com'
 }
 
@@ -30,6 +31,13 @@ const api = {
       url: '/wx/user/login',
       data: {
         code: 'required'
+      }
+    },
+    updateInfo: {
+      method: 'POST',
+      url: '/wx/user',
+      data: {
+        data: {}
       }
     },
     info: {
@@ -109,10 +117,22 @@ function disposeUrl (obj, prefix) {
   Object.keys(obj).forEach(v => {
     if (obj[v].url) {
       obj[v].url = prefix + obj[v].url
+      obj[v].apiConfigPre = apiConfigPre
     } else {
       obj[v] = disposeUrl(obj[v], prefix)
     }
   })
 
   return obj
+}
+
+function apiConfigPre() {
+  if (env === 'production' || env === 'test') {
+    if (this.preg) {
+      for (let key in this.preg) {
+        this.url = this.url.replace('{' + key + '}', this.preg[key])
+      }
+      return this
+    }
+  }
 }

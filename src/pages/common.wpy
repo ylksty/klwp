@@ -30,6 +30,7 @@
   import { DEMOMSGCHANGE } from '../store/types/demo'
   import { demoFun } from '../store/actions'
   import request from '../model/request'
+  import authModel from '../model/authModel'
 
   @connect({
     stateDemoMsg (state) {
@@ -69,39 +70,27 @@
     methods = {
       // 同步请求
       async syncRequestTap () {
-        let config = Object.assign({}, api.user.login, {data: { code: 22, type: '' }})
-        let res = await this.syncRequest(config)
+        let config = Object.assign({}, api.user.info, {preg: {id: 1}})
+        let res = await request.syncRequest(config)
+        console.log('同步请求成功')
         console.log(res)
       },
       // 异步请求
       asyncRequestTap () {
-        console.log(22)
-        request.asyncRequest({auth: true}, function() {
-          console.log(222)
+        let config = Object.assign({}, api.user.info)
+        request.asyncRequest(config, function(res) {
+          console.log('异步请求成功')
+          console.log(res)
         })
-//        let config = Object.assign({}, api.user.login, {data: { code: 22 }})
-//        this.msasyncRequest(config, function (res) {
-//          console.log(res)
-//        })
       }
     }
 
     events = {
     }
 
-    onLoad() {
-      wepy.getSetting({
-        success: function(res) {
-          if (res.authSetting['scope.userInfo']) {
-            // 已经授权，可以直接调用 getUserInfo 获取头像昵称
-            wepy.getUserInfo({
-              success: function(res) {
-                console(res.userInfo)
-              }
-            })
-          }
-        }
-      })
+    async onLoad() {
+      let sk = await authModel.getSessionKey()
+      console.log('session获得:' + sk)
     }
   }
 </script>

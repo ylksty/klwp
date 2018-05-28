@@ -2,28 +2,30 @@ import wepy from 'wepy'
 import authModel from './authModel'
 
 async function syncRequest(apiConfig) {
-  if (apiConfig.auth) {
-    let sk = await authModel.getSessionKey()
-    if (!sk) {
-      return false
-    }
-    apiConfig.header = {}
-    apiConfig.header.cookie = 'SESSION=' + sk
+  apiConfig = apiConfig.apiConfigPre()
+  let sk = await authModel.getSessionKey()
+  if (!sk) {
+    return false
   }
+  apiConfig.header = {}
+  apiConfig.header.cookie = 'SESSION=' + sk
   let response = await wepy.request(apiConfig)
   return response
 }
 
+/**
+ * 异步请求
+ * @param apiConfig
+ * @param cb
+ */
 function asyncRequest(apiConfig, cb) {
-  if (apiConfig.auth) {
-    getSk().then(res => {
-      console.log(res)
-      return
-      apiConfig.header = {}
-      apiConfig.header.cookie = 'SESSION=' + res
-      wepy.request(apiConfig).then(d => cb(d))
-    })
-  }
+  // console.log(apiConfig)
+  // apiConfig = apiConfig.apiConfigPre()
+  getSk().then(res => {
+    apiConfig.header = {}
+    apiConfig.header.cookie = 'SESSION=' + res
+    wepy.request(apiConfig).then(d => cb(d))
+  })
 }
 
 async function getSk() {

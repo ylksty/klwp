@@ -7,6 +7,8 @@
   import wepy from 'wepy'
   import { connect } from 'wepy-redux'
   import { actionUserInfoSet } from '../store/actions'
+  import Request from '@/model/request'
+  import { api } from '../config'
 
   @connect({
     getName (state) {
@@ -17,16 +19,6 @@
   })
 
   export default class User extends wepy.component {
-    props = {
-      num: {
-        type: [Number, String],
-        coerce: function (v) {
-          return +v
-        },
-        default: 50
-      }
-    }
-
     data = {
     }
     events = {
@@ -39,6 +31,18 @@
     }
 
     methods = {
+      comUserInfoSet: (obj) => {
+        let config = Object.assign({}, api.user.updateInfo, { data: obj })
+        Request.asyncRequest(config, (res) => {
+          if (res.code === 200) {
+            console.log('用户信息更新成功')
+            wepy.setStorageSync('storageUserInfo', obj)
+            this.methods.actionUserInfoSet(obj)
+          } else {
+            console.log('用户信息更新失败')
+          }
+        })
+      }
     }
   }
 </script>
