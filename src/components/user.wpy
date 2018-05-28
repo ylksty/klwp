@@ -1,0 +1,44 @@
+<template>
+  <view>
+    {{getName}}
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import { connect } from 'wepy-redux'
+  import { actionUserInfoSet } from '../store/actions'
+
+  @connect({
+    getName (state) {
+      return state.user.nickName
+    }
+  }, {
+    actionUserInfoSet
+  })
+
+  export default class User extends wepy.component {
+    props = {
+      num: {
+        type: [Number, String],
+        coerce: function (v) {
+          return +v
+        },
+        default: 50
+      }
+    }
+
+    data = {
+    }
+    events = {
+    }
+
+    watch = {
+      num (curVal, oldVal) {
+        console.log(`旧值：${oldVal}，新值：${curVal}`)
+      }
+    }
+
+    methods = {
+    }
+  }
+</script>

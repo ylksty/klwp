@@ -1,8 +1,8 @@
 <template>
   <view class="container">
     <view class="userinfo" @tap="handleViewTap">
-      <image class="userinfo-avatar" src="{{ userInfo.avatarUrl }}" background-size="cover"/>
-      <view class="userinfo-nickname">{{ userInfo.nickName }}</view>
+      <image class="userinfo-avatar" src="{{getStateAvatarUrl}}" background-size="cover"/>
+      <view class="userinfo-nickname">{{getStateNickName}}</view>
     </view>
 
     <panel>
@@ -73,6 +73,7 @@
   import Group from '../components/group'
   import Toast from 'wepy-com-toast'
   import testMixin from '../mixins/test'
+  import userMixin from '../mixins/user'
 
   console.log('moduleA ignored: ', moduleA) // => moduleA ignored: {}
 
@@ -85,6 +86,12 @@
     },
     sumNum (state) {
       return state.counter.num + state.counter.asyncNum
+    },
+    getStateNickName (state) {
+      return state.user.nickName
+    },
+    getStateAvatarUrl (state) {
+      return state.user.avatarUrl
     }
   })
 
@@ -101,7 +108,7 @@
       toast: Toast
     }
 
-    mixins = [testMixin]
+    mixins = [testMixin, userMixin]
 
     data = {
       mynum: 20,

@@ -7,10 +7,9 @@
     </panel>
     <panel>
       <view class="title" slot="title">用户接口</view>
-      <button @tap="getUserInfo" size="mini">获取用户信息，自动处理登录</button>
-      <button open-type="getUserInfo" size="mini">getUserInfo</button>
-      <requests :userInfoButton="userInfoButton"></requests>
-      {{userInfoButton}}
+      <button wx:if="{{canIUse}}" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo" size="mini">获取用户信息</button>
+      <view>nickName: {{getStateNickName}}</view>
+      <image style="width: 100rpx;" mode="widthFix" src="{{getStateAvatarUrl}}"></image>
     </panel>
     <panel>
       <view class="title" slot="title">redux测试</view>
@@ -26,8 +25,8 @@
   import { connect } from 'wepy-redux'
   import { api, version } from '../config'
   import Panel from '@/components/panel' // alias example
-  import Requests from '@/components/requests' // aliasFields example
   import requestMixin from '../mixins/request'
+  import userMixin from '../mixins/user'
   import { DEMOMSGCHANGE } from '../store/types/demo'
   import { demoFun } from '../store/actions'
   import request from '../model/request'
@@ -35,6 +34,12 @@
   @connect({
     stateDemoMsg (state) {
       return state.demo.msg
+    },
+    getStateNickName (state) {
+      return state.user.nickName
+    },
+    getStateAvatarUrl (state) {
+      return state.user.avatarUrl
     }
   }, {
     changeStateDemoMsg: {type: DEMOMSGCHANGE, payload: 3},
@@ -45,14 +50,14 @@
       navigationBarTitleText: 'common'
     }
     components = {
-      panel: Panel,
-      requests: Requests
+      panel: Panel
     }
 
-    mixins = [requestMixin]
+    mixins = [requestMixin, userMixin]
 
     data = {
-      version: version
+      version: version,
+      canIUse: wepy.canIUse('button.open-type.getUserInfo')
     }
 
     computed = {
@@ -78,11 +83,6 @@
 //        this.msasyncRequest(config, function (res) {
 //          console.log(res)
 //        })
-      },
-      async getUserInfo () {
-        let config = Object.assign({}, api.user.info, {data: { id: 1 }})
-        let res = await this.mxsyncRequest(config)
-        console.log(res)
       }
     }
 
@@ -90,7 +90,18 @@
     }
 
     onLoad() {
-
+      wepy.getSetting({
+        success: function(res) {
+          if (res.authSetting['scope.userInfo']) {
+            // 已经授权，可以直接调用 getUserInfo 获取头像昵称
+            wepy.getUserInfo({
+              success: function(res) {
+                console(res.userInfo)
+              }
+            })
+          }
+        }
+      })
     }
   }
 </script>

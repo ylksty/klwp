@@ -34,8 +34,7 @@ const api = {
     },
     info: {
       method: 'GET',
-      url: '/wx/user/info/{id}',
-      auth: true
+      url: '/wx/user/info/{id}'
     },
     blog: {
       method: 'GET',
